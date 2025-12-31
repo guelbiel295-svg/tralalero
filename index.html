@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Banco de Aura</title>
+
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1.0,
+maximum-scale=1.0,
+user-scalable=no">
+
+<style>
+*{box-sizing:border-box;touch-action:manipulation;}
+
+html,body{
+  width:100%;
+  height:100%;
+  margin:0;
+  background:#020617;
+  font-family:'Segoe UI',Arial,sans-serif;
+  overflow:hidden;
+}
+
+.app{width:100vw;height:100vh}
+
+.card{
+  width:100%;
+  height:100%;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+}
+
+.header{
+  background:linear-gradient(135deg,#7c3aed,#a855f7);
+  padding:22px;
+  border-radius:22px;
+  font-size:26px;
+  font-weight:bold;
+  color:#fff;
+}
+
+input{
+  width:100%;
+  padding:18px;
+  margin-top:16px;
+  border-radius:18px;
+  border:none;
+  background:#020617;
+  color:#fff;
+  font-size:16px;
+}
+
+.btn{
+  width:100%;
+  padding:16px;
+  border-radius:20px;
+  border:none;
+  font-size:17px;
+  font-weight:bold;
+  margin-top:16px;
+}
+
+.btn-azul{background:#38bdf8;color:#000}
+.btn-vermelho{background:#ef4444;color:#000}
+.btn-cinza{background:#334155;color:#fff}
+
+.spacer{flex:1}
+.hide{display:none !important}
+
+/* ===== SUCESSO (BLOQUEADO POR PADRÃO) ===== */
+.sucesso{
+  position:fixed;
+  inset:0;
+  background:rgba(2,6,23,.95);
+  display:none; /* 🔒 NUNCA MOSTRA SOZINHO */
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+}
+
+.sucesso.show{
+  display:flex;
+}
+
+.sucesso-box{
+  background:#0b1220;
+  padding:32px 36px;
+  border-radius:26px;
+  box-shadow:0 0 50px rgba(99,102,241,.45);
+  text-align:center;
+}
+
+.sucesso-topo{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  margin-bottom:12px;
+}
+
+.check{
+  width:42px;
+  height:42px;
+  border-radius:10px;
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-size:26px;
+  font-weight:bold;
+}
+
+.sucesso-box h2{
+  margin:0;
+  font-size:26px;
+  color:#38bdf8;
+}
+
+.sucesso-box p{
+  margin-top:6px;
+  font-size:18px;
+  color:#c7d2fe;
+}
+
+/* DASHBOARD */
+.transfer-area{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  margin:20px 0 0 10px;
+}
+
+.botao-transferir{
+  width:90px;height:90px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#38bdf8,#6366f1);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 25px rgba(99,102,241,.6);
+}
+
+.botao-transferir img{
+  width:55px;height:55px;pointer-events:none;
+}
+
+.texto-transferir{
+  margin:10px 0 0 8px;
+  color:#c7d2fe;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- LOGIN -->
+<div class="card" id="login">
+  <div>
+    <div class="header">🔮 Banco de Aura</div>
+    <input id="loginUser" placeholder="Nome do usuário">
+    <button class="btn btn-azul" onclick="login()">Entrar</button>
+    <button class="btn btn-cinza" onclick="mostrar('cadastro')">Criar conta</button>
+  </div>
+  <div class="spacer"></div>
+</div>
+
+<!-- CADASTRO -->
+<div class="card hide" id="cadastro">
+  <div>
+    <div class="header">Criar Conta</div>
+    <input id="cadastroUser" placeholder="Escolha um nome de usuário">
+    <button class="btn btn-azul" onclick="cadastrar()">Cadastrar</button>
+    <button class="btn btn-cinza" onclick="mostrar('login')">Voltar</button>
+  </div>
+  <div class="spacer"></div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="card hide" id="dashboard">
+  <div>
+    <div class="header">
+      Olá, <span id="nomeUsuario"></span>
+    </div>
+
+    <div style="margin:22px 10px;display:flex;gap:12px;align-items:center">
+      <div style="font-size:18px;color:#e9d5ff">✨ Aura:</div>
+      <div id="saldo" style="font-size:36px;font-weight:bold;color:#67e8f9">0</div>
+    </div>
+  </div>
+
+  <div class="transfer-area">
+    <div class="botao-transferir" onclick="mostrar('transferencia')">
+      <img src="aura-transfer.png">
+    </div>
+    <div class="texto-transferir">Transferir</div>
+  </div>
+
+  <button class="btn btn-vermelho" onclick="sair()">Sair</button>
+  <div class="spacer"></div>
+</div>
+
+<!-- TRANSFERÊNCIA -->
+<div class="card hide" id="transferencia">
+  <div>
+    <div class="header">Transferir Aura</div>
+    <input id="destino" placeholder="Usuário destino">
+    <input id="valor" type="number" placeholder="Quantidade de Aura">
+    <button class="btn btn-azul" onclick="transferir()">Confirmar</button>
+    <button class="btn btn-cinza" onclick="mostrar('dashboard')">Voltar</button>
+  </div>
+  <div class="spacer"></div>
+</div>
+
+</div>
+
+<!-- SUCESSO (CADASTRO) -->
+<div class="sucesso" id="sucessoCadastro">
+  <div class="sucesso-box">
+    <div class="sucesso-topo">
+      <div class="check">✓</div>
+      <h2>Cadastro feito</h2>
+    </div>
+    <p>com sucesso</p>
+  </div>
+</div>
+
+<script>
+let usuarioAtual="", aura=0;
+
+/* 🔒 GARANTIA EXTRA */
+document.addEventListener("DOMContentLoaded",()=>{
+  document.getElementById("sucessoCadastro").classList.remove("show");
+});
+
+function cadastrar(){
+  const u=document.getElementById("cadastroUser").value.trim();
+  if(!u) return;
+  if(localStorage.getItem("user_"+u)) return;
+
+  localStorage.setItem("user_"+u,"true");
+  localStorage.setItem("aura_"+u,0);
+
+  const tela=document.getElementById("sucessoCadastro");
+  tela.classList.add("show");
+
+  setTimeout(()=>{
+    tela.classList.remove("show");
+    mostrar("login");
+  },1500);
+}
+
+function login(){
+  const u=document.getElementById("loginUser").value.trim();
+  if(!localStorage.getItem("user_"+u)) return;
+
+  usuarioAtual=u;
+  aura=Number(localStorage.getItem("aura_"+u))||0;
+  document.getElementById("nomeUsuario").innerText=u;
+  atualizar();
+  mostrar("dashboard");
+}
+
+function atualizar(){
+  document.getElementById("saldo").innerText=aura;
+  localStorage.setItem("aura_"+usuarioAtual,aura);
+}
+
+function transferir(){
+  const d=document.getElementById("destino").value.trim();
+  const v=Number(document.getElementById("valor").value);
+  if(!localStorage.getItem("user_"+d)||v<=0||v>aura||d===usuarioAtual) return;
+
+  aura-=v;
+  atualizar();
+  localStorage.setItem("aura_"+d,(Number(localStorage.getItem("aura_"+d))||0)+v);
+  mostrar("dashboard");
+}
+
+function sair(){
+  location.reload();
+}
+
+function mostrar(id){
+  ["login","cadastro","dashboard","transferencia"].forEach(t=>{
+    document.getElementById(t).classList.add("hide");
+  });
+  document.getElementById(id).classList.remove("hide");
+}
+</script>
+
+</body>
+</html>
